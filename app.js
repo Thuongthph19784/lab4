@@ -7,6 +7,8 @@ var logger = require('morgan');
 var indexRouter = require('./routes/index');
 var product = require('./routes/product');
 const mongoose = require("mongoose");
+const { required } = require('nodemon/lib/config');
+require('dotenv').config();
 
 // mongoose
 //   .connect("mongodb://localhost:27017/lab34", {
@@ -18,12 +20,12 @@ const mongoose = require("mongoose");
 
   require("./components/model/ProductModel");
 var app = express();
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000
 
 mongoose.set('strictQuery',false)
 const connectDB = async ()=> {
   try {
-  const conn = await mongoose. connect(process.env.MONGO_URI) ;
+  const conn = await mongoose.connect(process.env.MONGO_URI) ;
   console. log(`MongoDB Connected: ${conn.connection.host}*`);
   } catch (error) {
     console. log(error);
@@ -60,9 +62,8 @@ app.use(function(err, req, res, next) {
   res.render('error');
 });
 
-app.listen(PORT, () => {
-  connectDB();
-  console.log(`Server is running on port ${PORT}`);
-})
+connectDB().then(
+  () => app.listen(PORT, () => console.log(`Server running on port ${PORT}`))
+)
 
 module.exports = app;
